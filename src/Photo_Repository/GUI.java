@@ -10,6 +10,8 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import javax.swing.*;
+import javax.swing.filechooser.*;
 
 public class GUI {
     private static JFrame frame;
@@ -23,6 +25,7 @@ public class GUI {
     final static String PRIVATE_CARD = "Private Card";
     final static String PUBLIC_CARD = "Public Card";
     final static String ADD_FILE = "Add File";
+    final static String FILE_CHOOSER = "File Chooser";
 
     public void startGUI(){
         album = new Photo_List();
@@ -36,7 +39,8 @@ public class GUI {
         welcomeGUI();
         private_view();
         public_view();
-        addfilefunction();
+        addfile();
+        filechooserfunction();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.add(home);
         frame.pack();
@@ -179,38 +183,49 @@ public class GUI {
         home.add(private_repo, PUBLIC_CARD);
     }
 
-    public void addfilefunction() {
-        JPanel addfile = new JPanel();
+    public void addfile() {
+        JPanel addfiles = new JPanel();
 
-        addfile.setLayout(new GridLayout(4,2));
+        JButton save = new JButton("Save");
 
-        addfile.add(new JLabel("Please enter the type of shoe: "));
-        JTextField typeofshoe = new JTextField(20);
-        addfile.add(typeofshoe);
-
-        addfile.add(new JLabel("Please enter the colorway of the shoe: "));
-        JTextField colorway = new JTextField(20);
-        addfile.add(colorway);
-
-        addfile.add(new JLabel("Please enter the year the shoe was released: "));
-        JTextField yearofrelease = new JTextField(20);
-        addfile.add(yearofrelease);
-
-        JButton done = new JButton("Done");
-        done.addActionListener(new ActionListener() {
+        save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (private_true) {
-                    cards.show(home, PRIVATE_CARD);
-                } else {
-                    cards.show(home, PUBLIC_CARD);
-                }
+                cards.show(home, FILE_CHOOSER);
             }
         });
 
-        addfile.add(done);
+        addfiles.add(save, BorderLayout.CENTER);
+        home.add(addfiles, ADD_FILE);
+    }
 
-        home.add(addfile, ADD_FILE);
+    public void filechooserfunction() {
+        JPanel filechooser = new JPanel();
+        JLabel l = new JLabel("no file selected");
+
+        JFileChooser selector = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+
+        selector.setMultiSelectionEnabled(true);
+
+        int temp_dialog = selector.showSaveDialog(null);
+
+        if (temp_dialog == JFileChooser.APPROVE_OPTION) {
+            // get the selelcted files
+            File files[] = selector.getSelectedFiles();
+
+            int t = 0;
+            // set text to blank
+            l.setText("");
+
+            // set the label to the path of the selected files
+            while (t++ < files.length)
+                l.setText(l.getText() + " " + files[t - 1].getName());
+        }
+        // if the user cancelled the operation
+        else
+            l.setText("the user cancelled the operation");
+
+        home.add(filechooser, FILE_CHOOSER);
     }
 }
 
