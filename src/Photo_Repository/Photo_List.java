@@ -9,47 +9,44 @@ import java.util.Scanner;
 
 
 public class Photo_List {
-    private ArrayList<Photo> gallery = new ArrayList<Photo>();
+    private ArrayList<Photo> gallery;
 
-    public void add_Photo(){
+    public Photo_List(){
+        gallery = new ArrayList<Photo>();
+    }
 
-        /*String type_of_shoe;
-        String name_of_file;
-        String colorway;
-        int year_of_release;
-        LocalDateTime time_of_upload;
-        String imagePath;
+    public void add_Photo(String reference, Boolean priv_or_pub, String name_of_file){
+        LocalDateTime time_of_upload = LocalDateTime.now();
         String destinationFile = "Photo_database\\";
-        Scanner scanner = new Scanner(new InputStreamReader(System.in));
-        System.out.println("Please enter the type of shoe: ");
-        type_of_shoe = scanner.nextLine();
-        System.out.println("Please enter the name of file: ");
-        name_of_file = scanner.nextLine();
-        System.out.println("Please enter the colorway of shoe: ");
-        colorway = scanner.nextLine();
-        System.out.println("Please enter the pathway of photo: ");
-        imagePath = scanner.nextLine();
-        System.out.println("Please enter the year the shoe was released: ");
-        year_of_release = scanner.nextInt();
-        time_of_upload = LocalDateTime.now();
-        gallery.add(new Photo(type_of_shoe, colorway, year_of_release, time_of_upload, imagePath));
-        System.out.println(destinationFile + name_of_file);
-        Path begin = Paths.get(imagePath);
+
+        Photo temp = new Photo(time_of_upload, reference, (destinationFile + name_of_file), priv_or_pub);
+
+        gallery.add(temp);
+        Path begin = Paths.get(reference);
         Path end = Paths.get((destinationFile + name_of_file));
         try {
             Files.move(begin, end);
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     public void print_Gallery(){
         for (int i = 0; i < gallery.size(); i++){
-            System.out.println(gallery.get(i).getType_of_shoe());
-            System.out.println(gallery.get(i).getColorway());
-            System.out.println(gallery.get(i).getYear_of_release());
             System.out.println(gallery.get(i).getTime_of_upload());
             System.out.println(gallery.get(i).getImagePath());
         }
+    }
+
+    public int get_Length() {
+        return gallery.size();
+    }
+
+    public String index_ReturnImagePath (int index) {
+        return gallery.get(index).getImagePath();
+    }
+
+    public String index_ReturnDestination (int index) {
+        return gallery.get(index).getDestination();
     }
 }

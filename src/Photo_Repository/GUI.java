@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.filechooser.*;
 
@@ -24,8 +25,6 @@ public class GUI {
     final static String WELCOME_CARD = "Welcome Card";
     final static String PRIVATE_CARD = "Private Card";
     final static String PUBLIC_CARD = "Public Card";
-    final static String ADD_FILE = "Add File";
-    final static String FILE_CHOOSER = "File Chooser";
 
     public void startGUI(){
         album = new Photo_List();
@@ -37,10 +36,8 @@ public class GUI {
 
 
         welcomeGUI();
-        private_view();
         public_view();
-        addfile();
-        filechooserfunction();
+        private_view();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.add(home);
         frame.pack();
@@ -81,39 +78,40 @@ public class GUI {
     }
 
     public void private_view(){
-        String imagePath0 = "C:\\Users\\klbew\\IdeaProjects\\Photos\\Photo_database\\Air_Jordan_1_University_Blue.jpg";
-        String imagePath1 = "C:\\Users\\klbew\\IdeaProjects\\Photos\\Photo_database\\Air_Jordan_2_Chicago.jpg";
-        String imagePath2 = "C:\\Users\\klbew\\IdeaProjects\\Photos\\Photo_database\\Air_Jordan_3_Racer_Blue.jpg";
-        String imagePath3 = "C:\\Users\\klbew\\IdeaProjects\\Photos\\Photo_database\\Air_Jordan_4_oreo.jpg";
-        String imagePath4 = "C:\\Users\\klbew\\IdeaProjects\\Photos\\Photo_database\\Air_Jordan_5_Raging_Bull.jpg";
-        String imagePath5 = "C:\\Users\\klbew\\IdeaProjects\\Photos\\Photo_database\\Air_Jordan_6_UNC.jpg";
+        int length = album.get_Length();
+        int i = 0;
+
         JPanel private_repo = new JPanel();
 
-        private_repo.setLayout(new GridLayout(3,2));
+        private_repo.setLayout(new GridLayout(length / 2,3));
 
-        BufferedImage myPicture0 = null;
-        BufferedImage myPicture1 = null;
-        BufferedImage myPicture2 = null;
-        BufferedImage myPicture3 = null;
-        BufferedImage myPicture4 = null;
-        BufferedImage myPicture5 = null;
-        try {
-            myPicture0 = ImageIO.read(new File(imagePath0));
-            myPicture1 = ImageIO.read(new File(imagePath1));
-            myPicture2 = ImageIO.read(new File(imagePath2));
-            myPicture3 = ImageIO.read(new File(imagePath3));
-            myPicture4 = ImageIO.read(new File(imagePath4));
-            myPicture5 = ImageIO.read(new File(imagePath5));
-        } catch (IOException e) {
-            e.printStackTrace();
+        ArrayList<BufferedImage> myPicture = new ArrayList<BufferedImage>();
+        ArrayList<String> imagePath = new ArrayList<String>();
+        ArrayList<JButton> btns = new ArrayList<JButton>();
+        System.out.println(length);
+         while (i < length){
+            imagePath.add(album.index_ReturnDestination(i));
+            i++;
+         }
+         i = 0;
+
+        while (i < length){
+            try {
+                System.out.println(imagePath.get(i));
+                myPicture.add(ImageIO.read(new File(imagePath.get(i))));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            i++;
         }
+        i = 0;
 
-        JButton picLabel0 = new JButton(new ImageIcon(myPicture0));
-        JButton picLabel1 = new JButton(new ImageIcon(myPicture1));
-        JButton picLabel2 = new JButton(new ImageIcon(myPicture2));
-        JButton picLabel3 = new JButton(new ImageIcon(myPicture3));
-        JButton picLabel4 = new JButton(new ImageIcon(myPicture4));
-        JButton picLabel5 = new JButton(new ImageIcon(myPicture5));
+        while (i < length){
+            btns.add(new JButton(new ImageIcon(myPicture.get(i))));
+            private_repo.add(btns.get(i));
+            i++;
+        }
+        i = 0;
 
         JButton done = new JButton("Done");
 
@@ -129,16 +127,10 @@ public class GUI {
         addfile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cards.show(home, ADD_FILE);
+                filechooserfunction();
             }
         });
 
-        private_repo.add(picLabel0);
-        private_repo.add(picLabel1);
-        private_repo.add(picLabel2);
-        private_repo.add(picLabel3);
-        private_repo.add(picLabel4);
-        private_repo.add(picLabel5);
         private_repo.add(done, BorderLayout.CENTER);
         private_repo.add(addfile, BorderLayout.CENTER);
 
@@ -172,7 +164,7 @@ public class GUI {
         addfile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cards.show(home, ADD_FILE);
+                filechooserfunction();
             }
         });
 
@@ -183,25 +175,7 @@ public class GUI {
         home.add(private_repo, PUBLIC_CARD);
     }
 
-    public void addfile() {
-        JPanel addfiles = new JPanel();
-
-        JButton save = new JButton("Save");
-
-        save.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cards.show(home, FILE_CHOOSER);
-            }
-        });
-
-        addfiles.add(save, BorderLayout.CENTER);
-        home.add(addfiles, ADD_FILE);
-    }
-
     public void filechooserfunction() {
-        JPanel filechooser = new JPanel();
-        JLabel l = new JLabel("no file selected");
 
         JFileChooser selector = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 
@@ -215,17 +189,21 @@ public class GUI {
 
             int t = 0;
             // set text to blank
-            l.setText("");
 
             // set the label to the path of the selected files
-            while (t++ < files.length)
-                l.setText(l.getText() + " " + files[t - 1].getName());
+            while (t < files.length){
+                album.add_Photo(files[t].getAbsolutePath(), private_true, files[t].getName());
+                t++;
+            }
+            album.print_Gallery();
+            home.remove(2);
+            private_view();
+            cards.show(home, PRIVATE_CARD);
         }
         // if the user cancelled the operation
         else
-            l.setText("the user cancelled the operation");
+            System.out.println("cancelled");
 
-        home.add(filechooser, FILE_CHOOSER);
     }
 }
 
