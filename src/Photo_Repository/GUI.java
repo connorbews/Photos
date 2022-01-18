@@ -181,6 +181,8 @@ public class GUI {
 
         selector.setMultiSelectionEnabled(true);
 
+        selector.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "png"));
+
         int temp_dialog = selector.showSaveDialog(null);
 
         if (temp_dialog == JFileChooser.APPROVE_OPTION) {
