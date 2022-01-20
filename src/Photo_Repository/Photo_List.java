@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 
 public class Photo_List {
