@@ -265,9 +265,7 @@ public class GUI {
                     private_view();
                     cards.show(home, PRIVATE_CARD);
                 } else {
-                    pub_album.remove_Photo(deleteIndex);
-                    public_view();
-                    cards.show(home, PUBLIC_CARD);
+                    System.out.println("You cannot delete this file");
                 }
 
             }
