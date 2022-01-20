@@ -1,5 +1,6 @@
 package Photo_Repository;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.*;
@@ -17,7 +18,13 @@ public class Photo_List {
 
     public void add_Photo(String reference, Boolean priv_or_pub, String name_of_file){
         LocalDateTime time_of_upload = LocalDateTime.now();
-        String destinationFile = "Photo_database\\";
+        String destinationFile;
+
+        if (priv_or_pub) {
+            destinationFile = "private_Photo_database\\";
+        } else {
+            destinationFile = "public_Photo_database\\";
+        }
 
         Photo temp = new Photo(time_of_upload, reference, (destinationFile + name_of_file), priv_or_pub);
 
@@ -29,6 +36,13 @@ public class Photo_List {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void remove_Photo(int index) {
+        File file = new File(gallery.get(index).getDestination());
+        file.delete();
+        gallery.remove(index);
+
     }
 
     public void print_Gallery(){

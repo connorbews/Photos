@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 import java.io.FileWriter;
 import java.io.IOException;
 
-//import org.json.simple.JSONObject;
-
 public class Photo {
 
     private LocalDateTime time_of_upload;
@@ -57,9 +55,4 @@ public class Photo {
     public Boolean getPrivateorpublic() {
         return privateorpublic;
     }
-
-    /*public void jsonsave(){
-
-
-    }*/
 }
